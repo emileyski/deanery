@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: applicants-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: applicants
+  template:
+    metadata:
+      labels:
+        app: applicants
+    spec:
+      containers:
+        - name: applicants
+          image: dmatsenko/deanery.applicants
+          env:
+            - name: MONGO_URI
+              value: "mongodb://applicants-mongo-srv:27017/applicants"
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: deanery
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: applicants-srv
+spec:
+  selector:
+    app: applicants
+  ports:
+    - name: applicants
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

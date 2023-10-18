@@ -41,7 +41,8 @@ const userSchema = new Schema(
       default: Date.now,
     },
     userPhoto: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "File", // Имя коллекции, к которой создается ссылка
     },
     gender: {
       type: String,

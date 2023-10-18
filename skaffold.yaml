@@ -16,3 +16,11 @@ build:
         manual:
           - src: "src/**/*.js"
             dest: .
+    - image: dmatsenko/deanery.applicants
+      context: applicants
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
