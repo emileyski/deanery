@@ -1,0 +1,14 @@
+.button {
+  border-radius: 5px;
+  background: #1e1e1e;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  padding: 7px 0;
+  min-width: 150px;
+  cursor: pointer;
+}
+
+.button.dark {
+  background: #262626;
+}

@@ -1,0 +1,55 @@
+@import url(./_fonts.scss);
+@import url(./reset.scss);
+html {
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  scroll-behavior: smooth;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  font-family: Source Sans Pro, sans-serif;
+  --color-background: #ffffff;
+  --color-foreground: #1e1e1e;
+  color: var(--color-foreground);
+  background-color: var(--color-background);
+}
+
+::placeholder {
+  font-family: Source Sans Pro, sans-serif;
+}
+
+:disabled {
+  opacity: 0.5;
+}
+
+body.dark {
+  --color-background: #000000;
+  --color-foreground: #fdfdfd;
+}
+
+img {
+  user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+a {
+  cursor: pointer;
+  user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}

@@ -1,0 +1,16 @@
+.button {
+  border-radius: 6px;
+  background: #1e1e1e;
+  height: 35px;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fff;
+  width: 100%;
+  cursor: pointer;
+}
+
+.button.dark {
+  color: #1e1e1e;
+  background: #fff;
+}
