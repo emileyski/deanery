@@ -1,0 +1,13 @@
+.input {
+  border-radius: 4px;
+  border: 1px solid #070707;
+  padding: 10px;
+  width: 100%;
+  font-size: 16px;
+}
+
+.input.dark {
+  border: 1px solid #646464;
+  background-color: rgba($color: #8b8b8b, $alpha: 0.2);
+  color: #c4c4c4;
+}
