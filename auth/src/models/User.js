@@ -35,19 +35,9 @@ const userSchema = new Schema(
       enum: ["enrollee", "student", "dean"],
       default: "enrollee",
     },
-    //дата регистрации
-    regDate: {
-      type: Date,
-      default: Date.now,
-    },
     userPhoto: {
       type: Schema.Types.ObjectId,
       ref: "File", // Имя коллекции, к которой создается ссылка
-    },
-    gender: {
-      type: String,
-      enum: ["male", "female", "unspecified"],
-      default: "unspecified",
     },
     password: {
       type: String,

@@ -13,6 +13,7 @@ const options = require("./swagger.options");
 var bodyParser = require("body-parser");
 const { NotFoundError } = require("@deanery-common/shared");
 const errorHandler = require("./middlewares/error.middleware");
+const natsWrapper = require("./nats-wrapper");
 const app = express();
 
 const specs = swaggerJsdoc(options);
@@ -37,13 +38,21 @@ app.all("*", async (req, res, next) => {
 });
 app.use(errorHandler);
 
-const PORT = 3000;
+const PORT = 3001;
 
 const start = async () => {
   await mongoose.connect(MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
+
+  //TODO: Change this values
+  await natsWrapper.connect(
+    "ticketing",
+    "auth-service",
+    "http://localhost:4222"
+  );
+
   app.listen(PORT, () => {
     console.log(`Auth service is running at ${PORT} (v1)`);
   });

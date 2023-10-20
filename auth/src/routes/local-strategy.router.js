@@ -5,6 +5,8 @@ const getTokens = require("../utils");
 const signupValidation = require("../middlewares/validation/signup.validation");
 const upload = require("../multer-config");
 const FileModel = require("../models/File");
+const AccountCreatedPublisher = require("../events/publishers/account-created-publisher");
+const natsWrapper = require("../nats-wrapper");
 
 const router = new Router();
 
@@ -56,6 +58,14 @@ router.post(
     });
     await user.setPassword(password);
     await user.save();
+
+    //TODO дописать публишер
+    new AccountCreatedPublisher(natsWrapper.client).publish({
+      userId: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      birthDate: user.birthDate,
+    });
 
     const { accessToken, refreshToken } = getTokens(user);
 
