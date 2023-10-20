@@ -48,9 +48,9 @@ const start = async () => {
 
   //TODO: Change this values
   await natsWrapper.connect(
-    "ticketing",
-    "auth-service",
-    "http://localhost:4222"
+    process.env.NATS_CLUSTER_ID || "deanery",
+    process.env.NATS_CLIENT_ID || "auth-service",
+    process.env.NATS_URL || "http://localhost:4222"
   );
 
   app.listen(PORT, () => {

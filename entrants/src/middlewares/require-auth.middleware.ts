@@ -71,7 +71,7 @@ export class AuthorizatedMiddleware implements CanActivate {
       );
 
       request.user = decodedToken['userData'];
-      request.userId = decodedToken.userData.id;
+      request.userId = decodedToken['userData'].id;
       return true;
     } catch (error) {
       return false;

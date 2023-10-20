@@ -9,12 +9,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
+const nats_module_1 = require("./nats/nats.module");
+const certificates_module_1 = require("./certificates/certificates.module");
+const entrants_module_1 = require("./entrants/entrants.module");
+const typeorm_1 = require("@nestjs/typeorm");
+const entrant_entity_1 = require("./entrants/entities/entrant.entity");
+const certificate_entity_1 = require("./certificates/entities/certificate.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         controllers: [app_controller_1.AppController],
+        imports: [
+            nats_module_1.NatsModule,
+            certificates_module_1.CertificatesModule,
+            entrants_module_1.EntrantsModule,
+            typeorm_1.TypeOrmModule.forRoot({
+                type: 'postgres',
+                host: 'localhost',
+                port: 5432,
+                username: 'postgres',
+                password: 'postgres',
+                database: 'db',
+                autoLoadEntities: true,
+                synchronize: true,
+                entities: [entrant_entity_1.Entrant, certificate_entity_1.Certificate],
+            }),
+        ],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

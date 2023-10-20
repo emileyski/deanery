@@ -34,7 +34,7 @@ let AuthorizatedMiddleware = class AuthorizatedMiddleware {
         try {
             const decodedToken = (0, jsonwebtoken_1.verify)(token, process.env.JWT_KEY || 'some_jwt_access_secret');
             request.user = decodedToken['userData'];
-            request.userId = decodedToken.userData.id;
+            request.userId = decodedToken['userData'].id;
             return true;
         }
         catch (error) {
