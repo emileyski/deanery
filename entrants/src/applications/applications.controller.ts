@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Get } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Param } from '@nestjs/common';
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { AuthorizatedMiddleware } from 'src/middlewares/require-auth.middleware';
@@ -26,5 +26,11 @@ export class ApplicationsController {
   @UseGuards(AuthorizatedMiddleware, new RoleGuard(Roles.Dean))
   getAvailableApplications() {
     return this.applicationsService.getAvailableApplications();
+  }
+
+  @Post('apply/:id')
+  @UseGuards(AuthorizatedMiddleware, new RoleGuard(Roles.Dean))
+  acceptApplication(@Param('id') id: string) {
+    return this.applicationsService.applyApplication(id);
   }
 }

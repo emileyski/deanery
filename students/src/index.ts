@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { app } from "./app";
 import { natsWrapper } from "./nats-wrapper";
+import { StudentCreatedListener } from "./events/listeners/student-created-listener";
 // import { OrderCreatedListener } from "./events/listeners/order-created-listener";
 // import { OrderCancelledListener } from "./events/listeners/order-cancelled-listener";
 
@@ -38,16 +39,14 @@ const start = async () => {
     process.on("SIGINT", () => natsWrapper.client.close());
     process.on("SIGTERM", () => natsWrapper.client.close());
 
-    //listeners here
-    // new OrderCreatedListener(natsWrapper.client).listen();
-    // new OrderCancelledListener(natsWrapper.client).listen();
-
     await mongoose.connect(
       process.env.MONGO_URI ||
         "mongodb+srv://emilevi4:QKNlcjPJe7LyHxq6@my-cluster.x0cjd1e.mongodb.net/?retryWrites=true&w=majority"
     );
 
     console.log("Connected to MongoDb");
+
+    new StudentCreatedListener(natsWrapper.client).listen();
   } catch (error) {
     console.error(error);
   }

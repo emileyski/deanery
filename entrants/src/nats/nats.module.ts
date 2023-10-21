@@ -8,5 +8,6 @@ import { SpecialtyCreatedListener } from './listeners/speciality-created-listene
 @Module({
   imports: [EntrantsModule, SpecialtiesModule],
   providers: [NatsService, AccountCreatedListener, SpecialtyCreatedListener],
+  exports: [NatsService],
 })
 export class NatsModule {}

@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateEntrantDto } from './dto/create-entrant.dto';
-import { UpdateEntrantDto } from './dto/update-entrant.dto';
 import { EntrantsRepository } from './entrants.repository';
 
 @Injectable()
@@ -23,13 +21,5 @@ export class EntrantsService {
       .getOne();
 
     return entrant;
-  }
-
-  findAll() {
-    return `This action returns all entrants`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} entrant`;
   }
 }

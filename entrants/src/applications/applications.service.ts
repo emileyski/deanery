@@ -7,6 +7,8 @@ import { CreateApplicationDto } from './dto/create-application.dto';
 import { SpecialtyRepository } from 'src/specialties/repositories/speciality.repository';
 import { EntrantsRepository } from 'src/entrants/entrants.repository';
 import { ApplicationRepository } from './applications.repository';
+import { NatsService } from 'src/nats/nats.service';
+import { StudentCreatedPublisher } from 'src/nats/publishers/student-created-publisher';
 
 @Injectable()
 export class ApplicationsService {
@@ -14,6 +16,7 @@ export class ApplicationsService {
     private readonly specialtyRepository: SpecialtyRepository,
     private readonly entrantsRepository: EntrantsRepository,
     private readonly apllicationRepository: ApplicationRepository,
+    private readonly natsService: NatsService,
   ) {}
 
   async createApplication(createApplicationDto: CreateApplicationDto, user) {
@@ -78,6 +81,7 @@ export class ApplicationsService {
     const applications = await this.apllicationRepository
       .createQueryBuilder('application')
       .select([
+        'application.id',
         'entrant.id',
         'application.competitiveScore',
         'entrant.firstName',
@@ -93,8 +97,21 @@ export class ApplicationsService {
   async applyApplication(applicationId: string) {
     const application = await this.apllicationRepository.findOne({
       where: { id: applicationId },
+      relations: ['entrant', 'specialty'],
     });
 
     application.status = 'accepted';
+
+    await this.apllicationRepository.save(application);
+
+    const { firstName, lastName, id } = application.entrant;
+
+    new StudentCreatedPublisher(this.natsService.client).publish({
+      firstName,
+      lastName,
+      specialtyId: application.specialty.id,
+      userId: id,
+    });
+    return { message: `Application ${applicationId} was successfully applyed` };
   }
 }

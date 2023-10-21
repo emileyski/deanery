@@ -14,6 +14,7 @@ var bodyParser = require("body-parser");
 const { NotFoundError } = require("@deanery-common/shared");
 const errorHandler = require("./middlewares/error.middleware");
 const natsWrapper = require("./nats-wrapper");
+const StudentCreatedListener = require("./events/listeners/student-created-listener");
 const app = express();
 
 const specs = swaggerJsdoc(options);
@@ -52,6 +53,8 @@ const start = async () => {
     process.env.NATS_CLIENT_ID || "auth-service",
     process.env.NATS_URL || "http://localhost:4222"
   );
+
+  new StudentCreatedListener(natsWrapper.client).listen();
 
   app.listen(PORT, () => {
     console.log(`Auth service is running at ${PORT} (v1)`);

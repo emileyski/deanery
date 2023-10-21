@@ -9,7 +9,7 @@ const getTokens = (userData) => {
     delete userData.salt;
   }
   const accessToken = jwt.sign({ userData }, JWT_ACCESS_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "1d",
   });
 
   const refreshToken = jwt.sign({ userData }, JWT_REFRESH_SECRET, {
