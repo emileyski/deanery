@@ -3,13 +3,17 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as nats from 'node-nats-streaming'; // Correct import statement
 import { Stan } from 'node-nats-streaming'; // Ensure the correct import
 import { AccountCreatedListener } from './listeners/account-created-listener';
+import { SpecialtyCreatedListener } from './listeners/speciality-created-listener';
 // import { TicketCreatedListener } from './ticket-created-listener';
 
 @Injectable()
 export class NatsService implements OnModuleInit {
   private _client?: Stan;
 
-  constructor(private accountCreatedListener: AccountCreatedListener) {}
+  constructor(
+    private accountCreatedListener: AccountCreatedListener,
+    private specialtyCreatedListener: SpecialtyCreatedListener,
+  ) {}
 
   get client() {
     if (!this._client) {
@@ -36,11 +40,13 @@ export class NatsService implements OnModuleInit {
     return new Promise<void>((resolve, reject) => {
       this.client.on('connect', () => {
         console.log('Connected to NATS');
-        // this.ticketCreatedListener(this.client).listen();
-        // this.ticketCreatedListener.setClient(this.client);
-        // this.ticketCreatedListener.listen();
         this.accountCreatedListener.setClient(this.client);
         this.accountCreatedListener.listen();
+
+        this.specialtyCreatedListener.setClient(this.client);
+
+        this.specialtyCreatedListener.listen();
+
         resolve();
       });
 

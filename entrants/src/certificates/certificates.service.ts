@@ -1,29 +1,64 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCertificateDto } from './dto/create-certificate.dto';
-import { UpdateCertificateDto } from './dto/update-certificate.dto';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CertificatesRepository } from './certificates.repository';
+import { EntrantsRepository } from 'src/entrants/entrants.repository';
 
 @Injectable()
 export class CertificatesService {
-  constructor(private certificatesRepo: CertificatesRepository) {}
+  constructor(
+    private certificatesRepo: CertificatesRepository,
+    private entrantsService: EntrantsRepository,
+  ) {}
 
-  create(createCertificateDto: CreateCertificateDto) {
+  async create(createCertificateDto: any, file: any, enrolleeId: string) {
+    const entrant = await this.entrantsService.findOne({
+      where: { id: enrolleeId },
+    });
+    if (!entrant) {
+      throw new NotFoundException(`Entrant with ID ${enrolleeId} not found.`);
+    }
+
+    const certificate = this.certificatesRepo.create({
+      certificateType: createCertificateDto.certificateType,
+      grade: createCertificateDto.grade,
+      entrant,
+      filename: file.originalname,
+      data: file.buffer,
+    });
+
+    await this.certificatesRepo.save(certificate);
+
     return 'This action adds a new certificate';
   }
 
-  findAll() {
-    return `This action returns all certificates`;
+  async findOneByEntrantId(id: string, enrolleeId: string) {
+    const certificate = await this.certificatesRepo.findOne({ where: { id } });
+
+    if (!certificate) {
+      throw new NotFoundException(`Certificate with ID ${id} not found.`);
+    }
+    if (certificate.entrant.id !== enrolleeId) {
+      throw new ForbiddenException();
+    }
+
+    return certificate;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} certificate`;
-  }
+  async remove(id: string, enrolleeId: string) {
+    const result = await this.certificatesRepo.delete({
+      id,
+      entrant: await this.entrantsService.findOne({
+        where: { id: enrolleeId },
+      }),
+    });
 
-  update(id: number, updateCertificateDto: UpdateCertificateDto) {
-    return `This action updates a #${id} certificate`;
-  }
+    if (result.affected === 0) {
+      throw new NotFoundException(`Certificate with ID "${id}" not found`);
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} certificate`;
+    return { message: 'Certificate was succesfully deleted' };
   }
 }

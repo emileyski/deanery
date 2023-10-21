@@ -1,34 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { EntrantsService } from './entrants.service';
-import { CreateEntrantDto } from './dto/create-entrant.dto';
-import { UpdateEntrantDto } from './dto/update-entrant.dto';
+import { AuthorizatedMiddleware } from 'src/middlewares/require-auth.middleware';
+import { RoleGuard } from 'src/middlewares/role.guard';
+import { GetUser } from 'src/user/user.decorator';
 
-@Controller('entrants')
+@Controller('entrant')
 export class EntrantsController {
   constructor(private readonly entrantsService: EntrantsService) {}
 
-  @Post()
-  create(@Body() createEntrantDto: CreateEntrantDto) {
-    return this.entrantsService.create(createEntrantDto);
-  }
-
   @Get()
-  findAll() {
-    return this.entrantsService.findAll();
+  @UseGuards(AuthorizatedMiddleware, new RoleGuard('enrollee'))
+  getMyEntrantsData(@GetUser() user) {
+    return this.entrantsService.findById(user.id);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.entrantsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEntrantDto: UpdateEntrantDto) {
-    return this.entrantsService.update(+id, updateEntrantDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.entrantsService.remove(+id);
   }
 }

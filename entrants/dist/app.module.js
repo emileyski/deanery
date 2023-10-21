@@ -8,19 +8,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
-const app_controller_1 = require("./app.controller");
 const nats_module_1 = require("./nats/nats.module");
 const certificates_module_1 = require("./certificates/certificates.module");
 const entrants_module_1 = require("./entrants/entrants.module");
 const typeorm_1 = require("@nestjs/typeorm");
 const entrant_entity_1 = require("./entrants/entities/entrant.entity");
 const certificate_entity_1 = require("./certificates/entities/certificate.entity");
+const specialties_module_1 = require("./specialties/specialties.module");
+const speciality_entity_1 = require("./specialties/entities/speciality.entity");
+const coefficient_entity_1 = require("./specialties/entities/coefficient.entity");
+const applications_module_1 = require("./applications/applications.module");
+const application_entity_1 = require("./applications/entities/application.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        controllers: [app_controller_1.AppController],
         imports: [
             nats_module_1.NatsModule,
             certificates_module_1.CertificatesModule,
@@ -34,8 +37,10 @@ exports.AppModule = AppModule = __decorate([
                 database: 'db',
                 autoLoadEntities: true,
                 synchronize: true,
-                entities: [entrant_entity_1.Entrant, certificate_entity_1.Certificate],
+                entities: [entrant_entity_1.Entrant, certificate_entity_1.Certificate, speciality_entity_1.Specialty, coefficient_entity_1.Coefficient, application_entity_1.Application],
             }),
+            specialties_module_1.SpecialtiesModule,
+            applications_module_1.ApplicationsModule,
         ],
     })
 ], AppModule);

@@ -1,3 +1,4 @@
+import { Application } from 'src/applications/entities/application.entity';
 import { Certificate } from 'src/certificates/entities/certificate.entity';
 import { Column, Entity, PrimaryColumn, OneToMany } from 'typeorm';
 
@@ -17,4 +18,7 @@ export class Entrant {
 
   @OneToMany(() => Certificate, (certificate) => certificate.entrant)
   certificates: Certificate[];
+
+  @OneToMany(() => Application, (application) => application.entrant) // Добавлено новое отношение
+  applications: Application[]; // Добавлено новое поле
 }

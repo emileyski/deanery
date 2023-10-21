@@ -7,8 +7,22 @@ import { EntrantsRepository } from './entrants.repository';
 export class EntrantsService {
   constructor(private entrantsRepo: EntrantsRepository) {}
 
-  create(createEntrantDto: CreateEntrantDto) {
-    return 'This action adds a new entrant';
+  async findById(entrantId: string) {
+    const entrant = await this.entrantsRepo
+      .createQueryBuilder('entrant')
+      .leftJoinAndSelect('entrant.certificates', 'certificates')
+      .select([
+        'entrant.firstName',
+        'entrant.lastName',
+        'entrant.id',
+        'certificates.id',
+        'certificates.certificateType',
+        'certificates.grade',
+      ])
+      .where('entrant.id = :id', { id: entrantId })
+      .getOne();
+
+    return entrant;
   }
 
   findAll() {
@@ -17,13 +31,5 @@ export class EntrantsService {
 
   findOne(id: number) {
     return `This action returns a #${id} entrant`;
-  }
-
-  update(id: number, updateEntrantDto: UpdateEntrantDto) {
-    return `This action updates a #${id} entrant`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} entrant`;
   }
 }
