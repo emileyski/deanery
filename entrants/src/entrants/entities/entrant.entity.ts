@@ -19,6 +19,6 @@ export class Entrant {
   @OneToMany(() => Certificate, (certificate) => certificate.entrant)
   certificates: Certificate[];
 
-  @OneToMany(() => Application, (application) => application.entrant) // Добавлено новое отношение
-  applications: Application[]; // Добавлено новое поле
+  @OneToMany(() => Application, (application) => application.entrant)
+  applications: Application[];
 }
