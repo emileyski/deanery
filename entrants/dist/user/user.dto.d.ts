@@ -1,9 +1,10 @@
 export declare class UserDto {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    birthDate: Date;
-    roles: string[];
-    userPhoto?: string;
+    readonly firstName: string;
+    readonly lastName: string;
+    readonly email: string;
+    readonly birthDate: Date;
+    readonly roles: string[];
+    readonly userPhoto: string;
+    readonly version: number;
+    readonly id: string;
 }

@@ -32,6 +32,8 @@ export class SpecialtyCreatedListener extends Listener<SpecialtyCreatedEvent> {
 
     await this.specialtyRepository.save(specialty);
 
+    // console.log(data);
+
     const coefficients = data.coeficients.map((coeffData) => {
       const coefficient = this.coefficientRepository.create({
         certificateType: coeffData.certificateType,

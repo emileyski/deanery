@@ -17,3 +17,38 @@ spec:
                 name: auth-srv
                 port:
                   number: 3000
+          - path: /api/groups/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: students-srv
+                port:
+                  number: 3000
+          - path: /api/specialities/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: students-srv
+                port:
+                  number: 3000
+          - path: /api/streams/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: students-srv
+                port:
+                  number: 3000
+          - path: /api/students/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: students-srv
+                port:
+                  number: 3000
+          - path: /api/dean-applications/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: students-srv
+                port:
+                  number: 3000

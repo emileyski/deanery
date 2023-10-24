@@ -1,5 +1,6 @@
 require("express-async-errors");
 const express = require("express");
+const cors = require("cors"); // Add this line
 const passport = require("passport");
 const mongoose = require("mongoose");
 const { MONGO_URL } = require("./credentials");
@@ -7,7 +8,6 @@ const localStrategy = require("./strategies/local.strategy");
 var cookieParser = require("cookie-parser");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
-// const errorMiddleware = require("./middlewares/error.middleware");
 const router = require("./routes");
 const options = require("./swagger.options");
 var bodyParser = require("body-parser");
@@ -15,7 +15,10 @@ const { NotFoundError } = require("@deanery-common/shared");
 const errorHandler = require("./middlewares/error.middleware");
 const natsWrapper = require("./nats-wrapper");
 const StudentCreatedListener = require("./events/listeners/student-created-listener");
+
 const app = express();
+
+app.use(cors()); // Add this line to enable CORS
 
 const specs = swaggerJsdoc(options);
 app.use(
@@ -39,7 +42,7 @@ app.all("*", async (req, res, next) => {
 });
 app.use(errorHandler);
 
-const PORT = 3001;
+const PORT = 3000;
 
 const start = async () => {
   await mongoose.connect(MONGO_URL, {

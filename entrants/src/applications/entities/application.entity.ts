@@ -19,6 +19,6 @@ export class Application {
   @Column({ default: 'pending' })
   status: string;
 
-  @Column()
+  @Column({ type: 'double precision' })
   competitiveScore: number;
 }

@@ -2,28 +2,8 @@ import mongoose from "mongoose";
 import { app } from "./app";
 import { natsWrapper } from "./nats-wrapper";
 import { StudentCreatedListener } from "./events/listeners/student-created-listener";
-// import { OrderCreatedListener } from "./events/listeners/order-created-listener";
-// import { OrderCancelledListener } from "./events/listeners/order-cancelled-listener";
 
 const start = async () => {
-  // if (!process.env.JWT_KEY) {
-  //   throw new Error("JWT_KEY must be defined!");
-  // }
-
-  // if (!process.env.MONGO_URI) {
-  //   throw new Error("MONGO_URI is not defined!");
-  // }
-
-  // if (!process.env.NATS_CLIENT_ID) {
-  //   throw new Error("NATS_CLIENT_ID must be defined");
-  // }
-  // if (!process.env.NATS_URL) {
-  //   throw new Error("NATS_URL must be defined");
-  // }
-  // if (!process.env.NATS_CLUSTER_ID) {
-  //   throw new Error("NATS_CLUSTER_ID must be defined");
-  // }
-  // console.log(process.env.MONGO_URI!);
   try {
     await natsWrapper.connect(
       process.env.NATS_CLUSTER_ID || "deanery",
@@ -51,9 +31,9 @@ const start = async () => {
     console.error(error);
   }
 
-  app.listen(3002, () => console.log(`Students service listen on port 3002`));
+  app.listen(3000, () => console.log(`Students service listen on port 3000`));
 
-  process.env.JWT_KEY = "some_jwt_access_secret";
+  if (!process.env.JWT_KEY) process.env.JWT_KEY = "some_jwt_access_secret";
 };
 
 start();

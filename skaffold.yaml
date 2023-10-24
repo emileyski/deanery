@@ -3,10 +3,10 @@ kind: Config
 manifests:
   rawYaml:
     - ./infra/k8s/*
-    - ./infra/k8s-prod/*
+    - ./infra/k8s-dev/*
 build:
-  # local:
-  #   push: false
+  local:
+    push: false
   artifacts:
     - image: dmatsenko/deanery.auth
       context: auth
@@ -16,8 +16,16 @@ build:
         manual:
           - src: "src/**/*.js"
             dest: .
-    - image: dmatsenko/deanery.applicants
-      context: applicants
+    - image: dmatsenko/deanery.entrants
+      context: entrants
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    - image: dmatsenko/deanery.students
+      context: students
       docker:
         dockerfile: Dockerfile
       sync:

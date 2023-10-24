@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 const authenticateAccessTokenMiddleware = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-
   if (!token) {
     throw new NotAuthorizedError();
   }

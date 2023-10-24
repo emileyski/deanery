@@ -15,6 +15,7 @@
     "@deanery-common/shared": "^1.0.22",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "express-validator": "^7.0.1",
@@ -27,7 +28,8 @@
     "passport-local-mongoose": "^8.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "nodemon": "^3.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.8.4",

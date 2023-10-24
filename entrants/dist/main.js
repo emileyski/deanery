@@ -6,6 +6,11 @@ const common_1 = require("@nestjs/common");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.setGlobalPrefix('api/entrants/');
+    app.enableCors({
+        origin: 'http://localhost:5173',
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        credentials: true,
+    });
     app.useGlobalPipes(new common_1.ValidationPipe({ transform: true }));
     await app.listen(3000, () => {
         console.log('Entrants service is listening at port 3000');

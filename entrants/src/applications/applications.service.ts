@@ -51,6 +51,7 @@ export class ApplicationsService {
       );
 
       if (!matchingCertificate) {
+        // console.log(requiredCoefficient.certificateType);
         throw new BadRequestException(
           `Необходим сертификат с типом ${requiredCoefficient.certificateType} для подачи заявки на специальность`,
         );
@@ -77,6 +78,29 @@ export class ApplicationsService {
     };
   }
 
+  async getApplicationsByEntrantId(entrantId) {
+    const applications = await this.apllicationRepository
+      .createQueryBuilder('application')
+      .select([
+        'application.id',
+        'entrant.id',
+        'application.competitiveScore',
+        'application.status',
+        // 'entrant.firstName',
+        // 'entrant.lastName',
+        'specialty.id',
+        'specialty.name',
+        'specialty.code',
+        'specialty.faculty',
+      ])
+      .innerJoin('application.entrant', 'entrant')
+      .where('application.entrantId = :entrantId', { entrantId })
+      .innerJoin('application.specialty', 'specialty')
+      .getRawMany();
+
+    return applications;
+  }
+
   async getAvailableApplications() {
     const applications = await this.apllicationRepository
       .createQueryBuilder('application')
@@ -84,6 +108,7 @@ export class ApplicationsService {
         'application.id',
         'entrant.id',
         'application.competitiveScore',
+        'application.status',
         'entrant.firstName',
         'entrant.lastName',
       ])
@@ -113,5 +138,19 @@ export class ApplicationsService {
       userId: id,
     });
     return { message: `Application ${applicationId} was successfully applyed` };
+  }
+
+  async deleteApplication(applicationId: string, entrantId: string) {
+    const application = await this.apllicationRepository.findOne({
+      where: { id: applicationId, entrant: { id: entrantId } },
+    });
+
+    if (!application) {
+      throw new NotFoundException();
+    }
+
+    await this.apllicationRepository.remove(application);
+
+    return { message: `Application ${applicationId} was successfully deleted` };
   }
 }

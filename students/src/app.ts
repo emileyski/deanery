@@ -4,8 +4,12 @@ import { currentUser, errorHandler } from "@deanery-common/shared";
 import { NotFoundError } from "@deanery-common/shared";
 import cookieSession from "cookie-session";
 import router from "./routes";
+// import cors from "cors";
 
 const app = express();
+
+// app.use(cors()); // Add this line to enable CORS
+
 app.set("trust proxy", true);
 app.use(express.json());
 

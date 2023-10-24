@@ -18,7 +18,7 @@ import { Application } from './applications/entities/application.entity';
     EntrantsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: 'entrants-postgres-srv',
       port: 5432,
       username: 'postgres',
       password: 'postgres',

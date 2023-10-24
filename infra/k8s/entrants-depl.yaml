@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: entrants-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: entrants
+  template:
+    metadata:
+      labels:
+        app: entrants
+    spec:
+      containers:
+        - name: entrants
+          image: dmatsenko/deanery.entrants
+          env:
+            - name: MONGO_URI
+              value: "mongodb://entrants-mongo-srv:27017/entrants"
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: deanery
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+          # resources:
+          #   limits:
+          #     cpu: "1"
+          #     memory: "512Mi"
+          #   requests:
+          #     cpu: "100m"
+          #     memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: entrants-srv
+spec:
+  selector:
+    app: entrants
+  ports:
+    - name: entrants
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

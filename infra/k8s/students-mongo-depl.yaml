@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: students-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: students-mongo
+  template:
+    metadata:
+      labels:
+        app: students-mongo
+    spec:
+      containers:
+        - name: students-mongo
+          image: mongo
+          # resources:
+          #   limits:
+          #     cpu: "1"
+          #     memory: "512Mi"
+          #   requests:
+          #     cpu: "100m"
+          #     memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: students-mongo-srv
+spec:
+  selector:
+    app: students-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
