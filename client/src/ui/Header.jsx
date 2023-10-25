@@ -20,7 +20,6 @@ function Header() {
             <>
               <LinkButton to="/enrolee/certificate">Certificates</LinkButton>
               <LinkButton to="/enrolee/applications">Applications</LinkButton>
-              <LinkButton>for enrollee</LinkButton>
             </>
           )}
           {userData.roles[0] === "student" && (

@@ -52,3 +52,17 @@ spec:
                 name: students-srv
                 port:
                   number: 3000
+          - path: /api/entrants/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: entrants-srv
+                port:
+                  number: 3000
+          - path: /?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: client-srv
+                port:
+                  number: 5050

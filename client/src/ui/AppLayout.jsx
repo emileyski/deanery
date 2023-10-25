@@ -10,10 +10,13 @@ function AppLayout() {
   const navigation = useNavigation();
   const isLoading = navigation.state === "loading";
   const dispatch = useDispatch();
+  // const userData = useSelector((state) => state.user.userData);
+  // const navigate = useNavigate();
 
   useEffect(
     function () {
       dispatch(fetchUserData());
+      // if (!userData) navigate("/login");
     },
     [dispatch]
   );

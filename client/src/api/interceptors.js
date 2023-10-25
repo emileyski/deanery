@@ -65,3 +65,4 @@ const getAxiosInstance = (baseUrl) => {
 
 // Используйте axiosInstance для ваших запросов
 export default getAxiosInstance;
+//

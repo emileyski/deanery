@@ -7,7 +7,7 @@ export class SpecialtiesController {
   constructor(private specialtiesService: SpecialtiesService) {}
 
   @Get()
-  getAllSpecialties(@GetUser() user: any) {
+  getAllSpecialties() {
     // console.log(user);
     return this.specialtiesService.getSpecialtiesWithCoefficients();
   }

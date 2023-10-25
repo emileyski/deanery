@@ -30,6 +30,7 @@ import CreateDeanQuestionPage from "./features/student-questions/CreateDeanQuest
 import StudentQuestionsListPage, {
   loader as studentQuestionsListPage,
 } from "./features/student-questions/StudentQuestionsListPage";
+import WelcomePage from "./features/WelcomePage";
 
 const router = createBrowserRouter([
   {
@@ -39,7 +40,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <h1>Base</h1>,
+        element: <WelcomePage />,
       },
       {
         path: "/signup",
