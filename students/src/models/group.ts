@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 interface GroupAttrs {
   name: string;
-  stream: mongoose.Types.ObjectId;
+  stream: mongoose.Types.ObjectId | string;
   curator?: string;
 }
 
