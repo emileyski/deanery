@@ -1,37 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { redirect, useLoaderData, useNavigate } from "react-router-dom";
 import { STUDENTS_SERVICE_URL } from "../../credentials";
-
-const stream = {
-  name: "pzpu-22",
-  specialty: "6535a0a2a54a69c1fe9cad08",
-  version: 0,
-  id: "65368a9791a48e7ba3a6ce47",
-};
-
-const groups = [
-  {
-    curator: "Elena Petrovna",
-    name: "PZPI-21-1g24",
-    stream: "65368a9791a48e7ba3a6ce47",
-    version: 0,
-    id: "6536a50b50bfaee93e0fac29",
-  },
-  {
-    name: "ghrthtr",
-    stream: "65368a9791a48e7ba3a6ce47",
-    version: 0,
-    id: "6536a56024a8e1a1239af9d6",
-  },
-  {
-    name: "hgrthrt",
-    stream: "65368a9791a48e7ba3a6ce47",
-    version: 0,
-    id: "6536a5f324a8e1a1239af9ee",
-  },
-];
 
 function StreamById() {
   const navigate = useNavigate();
+  const { stream, groups } = useLoaderData();
 
   const handleAddGroupClick = async (groupId) => {
     const studentId = prompt("Enter student id:");
@@ -76,6 +48,22 @@ function StreamById() {
       </ul>
     </div>
   );
+}
+
+export async function streamByIdLoader({ params }) {
+  const resp = await fetch(`${STUDENTS_SERVICE_URL}streams/${params.id}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  });
+
+  if (resp.ok) {
+    const stream = await resp.json();
+    console.log(stream);
+    return stream;
+  } else {
+    return redirect("/dean/specialties");
+  }
 }
 
 export default StreamById;

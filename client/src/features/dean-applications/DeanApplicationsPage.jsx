@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { ENTRANTS_SERVICE_URL } from "../../credentials";
 import { useLoaderData, useNavigate } from "react-router-dom";
+import { formatCertificateName } from "../../utils";
+import axios from "axios";
 
 function DeanApplicationsPage() {
   const applications = useLoaderData();
 
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [certificates, setCertificates] = useState([]);
 
   const handleApplicationClick = (application) => {
     setSelectedApplication(application);
@@ -31,6 +35,8 @@ function DeanApplicationsPage() {
       if (resp.ok) {
         alert("Accepted");
         navigate("/dean/applications");
+        setSelectedApplication(null);
+        setCertificates([]);
       } else {
         alert("Failed to accept");
       }
@@ -41,6 +47,55 @@ function DeanApplicationsPage() {
 
   const handleRejectClick = () => {
     // Handle reject logic here
+  };
+
+  const getCertificates = async (entrantId) => {
+    const resp = await fetch(
+      `${ENTRANTS_SERVICE_URL}certificates/dean/${entrantId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+
+    const certificates = await resp.json();
+    setCertificates(certificates);
+  };
+
+  const loadCertificateFile = async (certificateId) => {
+    const accessToken = localStorage.getItem("accessToken");
+    const apiEndpoint = `${ENTRANTS_SERVICE_URL}certificates`;
+    const certId = certificateId;
+
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    // Отправка GET запроса на сервер
+    const response = await axios.get(`${apiEndpoint}/dean/${certId}/file`, {
+      responseType: "blob",
+      headers,
+    });
+
+    // Получение имени файла из заголовка Content-Disposition
+    const contentDispositionHeader = response.headers["content-disposition"];
+    const filename = contentDispositionHeader
+      ? contentDispositionHeader.split("filename=")[1]
+      : "certificate.pdf"; // Значение по умолчанию
+
+    // Создание ссылки для скачивания файла
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", filename.trim());
+
+    // Добавление ссылки в DOM и эмуляция клика для скачивания файла
+    document.body.appendChild(link);
+    link.click();
+
+    // Очистка ссылки
+    document.body.removeChild(link);
   };
 
   const filteredApplications = applications.filter((application) =>
@@ -107,11 +162,38 @@ function DeanApplicationsPage() {
               Accept
             </button>
             <button
-              className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+              className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded mr-4"
               onClick={handleRejectClick}
             >
               Reject
             </button>
+            <button
+              className="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded"
+              onClick={() => getCertificates(selectedApplication.entrant_id)}
+            >
+              Get certificates
+            </button>
+          </div>
+        </div>
+      )}
+      {certificates.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-lg font-semibold mb-4">Certificates</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {certificates.map((certificate) => (
+              <div key={certificate.id} className="p-4 border rounded-lg">
+                <h2 className="text-lg font-semibold">
+                  {formatCertificateName(certificate.certificateType)}
+                </h2>
+                <p className="text-gray-500">{certificate.grade}</p>
+                <button
+                  onClick={() => loadCertificateFile(certificate.id)}
+                  className="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded"
+                >
+                  Load certificate file
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       )}

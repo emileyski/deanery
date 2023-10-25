@@ -1,65 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { redirect, useLoaderData, useNavigate } from "react-router-dom";
 import { STUDENTS_SERVICE_URL } from "../../credentials";
 
 function DeanSpecialtiesPage() {
-  const specialties = [
-    {
-      name: "Software Ingeneering",
-      faculty: "Computer science",
-      code: "122",
-      availableForRecruitment: true,
-      version: 0,
-      id: "6535a0a2a54a69c1fe9cad08",
-    },
-    {
-      name: "Право",
-      faculty: "Computer science",
-      code: "071",
-      availableForRecruitment: true,
-      version: 0,
-      id: "6535a128a54a69c1fe9cad0a",
-    },
-    {
-      name: "Право",
-      faculty: "Computer science",
-      code: "071",
-      availableForRecruitment: true,
-      version: 0,
-      id: "65366cea91a48e7ba3a6ce30",
-    },
-    {
-      name: "Інженерія програмного забезпечення",
-      faculty: "Комп*ютерних наук",
-      code: "125",
-      availableForRecruitment: true,
-      version: 0,
-      id: "65366d4891a48e7ba3a6ce35",
-    },
-    {
-      name: "Інженерія програмного забезпечення 2",
-      faculty: "Комп*ютерних наук",
-      code: "153",
-      availableForRecruitment: true,
-      version: 0,
-      id: "65366d5d91a48e7ba3a6ce37",
-    },
-    {
-      name: "Інженерія програмного забезпечення 2",
-      faculty: "Комп*ютерних наук",
-      code: "153",
-      availableForRecruitment: true,
-      version: 0,
-      id: "65366d8391a48e7ba3a6ce39",
-    },
-    {
-      name: "hgtr[hrt",
-      faculty: "hgtr[hrt",
-      code: "125",
-      availableForRecruitment: true,
-      version: 0,
-      id: "65366ded91a48e7ba3a6ce3b",
-    },
-  ];
+  const specialties = useLoaderData();
 
   const navigate = useNavigate();
 
@@ -82,6 +25,28 @@ function DeanSpecialtiesPage() {
     }
   };
 
+  const handleRemoveSpecialtyClick = async (specialtyId) => {
+    const sure = confirm("Are you sure you want to remove this specialty?");
+    if (!sure) return;
+
+    const resp = await fetch(
+      `${STUDENTS_SERVICE_URL}specialities/${specialtyId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+
+    if (resp.ok) {
+      alert("Specialty removed successfully!");
+      window.location.reload();
+    } else {
+      alert("Failed to remove specialty!");
+    }
+  };
+
   return (
     <div className="container mx-auto mt-8">
       <h1 className="text-2xl font-semibold mb-4">Available Specialties</h1>
@@ -99,7 +64,10 @@ function DeanSpecialtiesPage() {
               {specialty.availableForRecruitment ? "Yes" : "No"}
             </p>
             {/* Add more details or buttons as needed */}
-            <button className="bg-red-500 py-1 px-3 rounded-full text-white">
+            <button
+              onClick={() => handleRemoveSpecialtyClick(specialty.id)}
+              className="bg-red-500 py-1 px-3 rounded-full text-white"
+            >
               Remove
             </button>
             <button
@@ -125,6 +93,22 @@ function DeanSpecialtiesPage() {
       </div>
     </div>
   );
+}
+
+export async function deanSpecialtiesPageLoader() {
+  const resp = await fetch(`${STUDENTS_SERVICE_URL}specialities`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  });
+
+  if (resp.ok) {
+    const specialties = await resp.json();
+    console.log(specialties);
+    return specialties;
+  } else {
+    return redirect("/login");
+  }
 }
 
 export default DeanSpecialtiesPage;

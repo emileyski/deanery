@@ -127,6 +127,11 @@ export class ApplicationsService {
 
     application.status = 'accepted';
 
+    await this.apllicationRepository.update(
+      { entrant: application.entrant },
+      { status: 'rejected' },
+    );
+
     await this.apllicationRepository.save(application);
 
     const { firstName, lastName, id } = application.entrant;

@@ -100,4 +100,26 @@ export class CertificatesController {
   getAll() {
     return this.certificatesService.getAll();
   }
+  @Get('dean/:id')
+  @UseGuards(AuthorizatedMiddleware, new RoleGuard(Roles.Dean))
+  getCertificatesByEntrartId(@Param('id') entrantId: string) {
+    return this.certificatesService.getCertificatesByEntrartId(entrantId);
+  }
+
+  @Get('dean/:certId/file')
+  @UseGuards(AuthorizatedMiddleware, new RoleGuard(Roles.Dean))
+  async getCerificateFile(
+    @Param('certId') certId: string,
+    @Res() res: Response,
+  ) {
+    const certificate =
+      await this.certificatesService.getCertificateFile(certId);
+
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=${certificate.filename}`,
+    );
+
+    res.send(certificate.data);
+  }
 }

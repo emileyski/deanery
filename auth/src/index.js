@@ -50,7 +50,6 @@ const start = async () => {
     useUnifiedTopology: true,
   });
 
-  //TODO: Change this values
   await natsWrapper.connect(
     process.env.NATS_CLUSTER_ID || "deanery",
     process.env.NATS_CLIENT_ID || "auth-service",

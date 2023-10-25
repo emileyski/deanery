@@ -14,6 +14,14 @@ export class CertificatesService {
     private entrantsRepo: EntrantsRepository,
   ) {}
 
+  async getCertificatesByEntrartId(entrantId: string) {
+    const certificates = await this.certificatesRepo.query(
+      `SELECT id, "certificateType", grade FROM certificate WHERE "entrantId" = '${entrantId}'`,
+    );
+
+    return certificates;
+  }
+
   async create(
     createCertificateDto: any,
     file: any,
@@ -41,6 +49,14 @@ export class CertificatesService {
       certificateType: certificate.certificateType,
       grade: certificate.grade,
     };
+  }
+
+  async getCertificateFile(certId) {
+    const certificate = await this.certificatesRepo.findOne({
+      where: { id: certId },
+    });
+
+    return certificate;
   }
 
   async findOneByIdAndEntrantId(id: string, enrolleeId: string) {

@@ -59,7 +59,6 @@ router.post(
     await user.setPassword(password);
     await user.save();
 
-    //TODO дописать публишер
     new AccountCreatedPublisher(natsWrapper.client).publish({
       userId: user._id,
       firstName: user.firstName,

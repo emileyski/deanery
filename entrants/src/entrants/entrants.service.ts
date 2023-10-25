@@ -5,6 +5,10 @@ import { EntrantsRepository } from './entrants.repository';
 export class EntrantsService {
   constructor(private entrantsRepo: EntrantsRepository) {}
 
+  async findAll() {
+    return this.entrantsRepo.find();
+  }
+
   async findById(entrantId: string) {
     const entrant = await this.entrantsRepo
       .createQueryBuilder('entrant')

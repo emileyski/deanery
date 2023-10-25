@@ -1,48 +1,33 @@
 import { useState } from "react";
-
-const group = {
-  name: "PZPI-21-1g24",
-  stream: "65368a9791a48e7ba3a6ce47",
-  version: 0,
-  id: "6536a50b50bfaee93e0fac29",
-};
-
-const students = [
-  {
-    firstName: "Bohdan",
-    lastName: "SAgtrghort",
-    version: 0,
-    group: "6536a50b50bfaee93e0fac29",
-    id: "65362985c948b0a7029850b8",
-  },
-];
-
-const unassignedStudents = [
-  {
-    firstName: "Shamil",
-    lastName: "Atarkov",
-    version: 0,
-    id: "6535a1b9c948b0a7029850b6",
-  },
-  {
-    firstName: "Bohdan",
-    lastName: "ggtr",
-    version: 0,
-    id: "65368bc1b7cd06ea4af92b88",
-  },
-];
+import { STUDENTS_SERVICE_URL } from "../../credentials";
+import { redirect, useLoaderData } from "react-router-dom";
 
 function GroupInfo() {
-  const [enrolledStudents, setEnrolledStudents] = useState(students);
+  const { group, students, unassignedStudents } = useLoaderData();
+
   const [unassignedStudentsList, setUnassignedStudentsList] =
     useState(unassignedStudents);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleEnrollClick = (student) => {
-    setEnrolledStudents((prevStudents) => [...prevStudents, student]);
-    setUnassignedStudentsList((prevList) =>
-      prevList.filter((s) => s.id !== student.id)
-    );
+  const handleEnrollClick = async (student) => {
+    const sure = confirm("Are you sure you want to enroll this student?");
+    if (!sure) return;
+
+    const resp = await fetch(`${STUDENTS_SERVICE_URL}students/togroup`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ studentId: student.id, groupId: group.id }),
+    });
+
+    if (resp.ok) {
+      alert("Student enrolled successfully!");
+      window.location.reload();
+    } else {
+      alert("Failed to enroll student!");
+    }
   };
 
   const handleSearchChange = (event) => {
@@ -60,7 +45,7 @@ function GroupInfo() {
       <h1 className="text-2xl font-semibold mb-4">{group.name}</h1>
       <h2 className="text-lg font-semibold mb-4">Students</h2>
       <ul className="list-disc pl-8">
-        {enrolledStudents.map((student) => (
+        {students.map((student) => (
           <li key={student.id}>
             {student.firstName} {student.lastName}
           </li>
@@ -92,6 +77,28 @@ function GroupInfo() {
       </div>
     </div>
   );
+}
+
+export async function groupByIdLoader({ params }) {
+  const groupResp = await fetch(`${STUDENTS_SERVICE_URL}groups/${params.id}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  });
+
+  const studsResp = await fetch(`${STUDENTS_SERVICE_URL}students/free`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  });
+
+  if (groupResp.ok && studsResp.ok) {
+    const data = await groupResp.json();
+    const students = await studsResp.json();
+    return { ...data, unassignedStudents: students };
+  } else {
+    return redirect("/dean/specialties");
+  }
 }
 
 export default GroupInfo;

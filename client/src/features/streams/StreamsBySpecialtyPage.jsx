@@ -24,6 +24,44 @@ function StreamsBySpecialtyPage() {
 
   const navigate = useNavigate();
 
+  const handleAddStreamClick = async () => {
+    const streamName = prompt("Enter the stream name:");
+
+    const resp = await fetch(`${STUDENTS_SERVICE_URL}streams`, {
+      body: JSON.stringify({ specialty: specialty.id, name: streamName }),
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (resp.ok) {
+      alert("Stream added successfully!");
+      window.location.reload();
+    } else {
+      alert("Failed to add stream!");
+    }
+  };
+
+  const handleRemoveStreamClick = async (streamId) => {
+    const sure = confirm("Are you sure you want to remove this stream?");
+    if (!sure) return;
+    const resp = await fetch(`${STUDENTS_SERVICE_URL}streams/${streamId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+
+    if (resp.ok) {
+      alert("Stream removed successfully!");
+      window.location.reload();
+    } else {
+      alert("Failed to remove stream!");
+    }
+  };
+
   return (
     <div className="container mx-auto mt-8">
       <h1 className="text-2xl font-semibold mb-4">{specialty.name}</h1>
@@ -34,7 +72,15 @@ function StreamsBySpecialtyPage() {
         Available for recruitment:{" "}
         {specialty.availableForRecruitment ? "Yes" : "No"}
       </p>
-      <h2 className="text-lg font-semibold mb-4">Streams</h2>
+      <h2 className="text-lg font-semibold mb-4">
+        Streams
+        <button
+          onClick={() => handleAddStreamClick()}
+          className="bg-green-500 py-1 px-3 rounded-full text-white ml-2"
+        >
+          Add stream
+        </button>
+      </h2>
       <ul className="list-disc pl-8">
         {streams.map((stream) => (
           <li className="flex mt-2" key={stream.id}>
@@ -50,6 +96,12 @@ function StreamsBySpecialtyPage() {
               className="ml-4 bg-green-500 text-white rounded-md py-2 px-2"
             >
               Add group
+            </button>
+            <button
+              onClick={() => handleRemoveStreamClick(stream.id)}
+              className="ml-4 bg-red-500 text-white rounded-md py-2 px-2"
+            >
+              Delete this stream
             </button>
           </li>
         ))}

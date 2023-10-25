@@ -16,15 +16,17 @@ import EnroleeApllicationsPage, {
 } from "./features/enrolee-applications/EnroleeApllicationsPage";
 import UserPage from "./features/user/UserPage";
 import AddSpecialtyPage from "./features/dean-specialties/AddSpecialty"; // action as addSpecialtyPageAction,
-import DeanSpecialtiesPage from "./features/dean-specialties/DeanSpecialtiesPage";
+import DeanSpecialtiesPage, {
+  deanSpecialtiesPageLoader,
+} from "./features/dean-specialties/DeanSpecialtiesPage";
 import DeanApplicationsPage, {
   loader as deanApplicationsLoader,
 } from "./features/dean-applications/DeanApplicationsPage";
 import StreamsBySpecialtyPage, {
   loader as streamsBySpecialtyLoader,
 } from "./features/streams/StreamsBySpecialtyPage";
-import StreamById from "./features/streams/StreamById";
-import GroupInfo from "./features/groups/GroupInfo";
+import StreamById, { streamByIdLoader } from "./features/streams/StreamById";
+import GroupInfo, { groupByIdLoader } from "./features/groups/GroupInfo";
 import DeaneryRequestsPage from "./features/dean-questions/DeanRequestsPage";
 import CreateDeanQuestionPage from "./features/student-questions/CreateDeanQuestionPage";
 import StudentQuestionsListPage, {
@@ -69,7 +71,7 @@ const router = createBrowserRouter([
       {
         path: "/dean/specialties/",
         element: <DeanSpecialtiesPage />,
-        // action: addSpecialtyPageAction,
+        loader: deanSpecialtiesPageLoader,
       },
       {
         path: "/dean/specialties/new",
@@ -93,12 +95,12 @@ const router = createBrowserRouter([
       {
         path: "/stream/:id",
         element: <StreamById />,
-        loader: streamsBySpecialtyLoader, //TODO: change loader
+        loader: streamByIdLoader,
       },
       {
         path: "/group/:id",
         element: <GroupInfo />,
-        loader: streamsBySpecialtyLoader, //TODO: change loader
+        loader: groupByIdLoader,
       },
       {
         path: "/student/questions/",
