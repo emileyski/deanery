@@ -33,6 +33,9 @@ import StudentQuestionsListPage, {
   loader as studentQuestionsListPage,
 } from "./features/student-questions/StudentQuestionsListPage";
 import WelcomePage from "./features/WelcomePage";
+import DeanStudentsPage, {
+  deanStudentsPageLoader,
+} from "./features/dean-students/DeanStudentsPage";
 
 const router = createBrowserRouter([
   {
@@ -81,6 +84,11 @@ const router = createBrowserRouter([
         path: "/dean/applications/",
         element: <DeanApplicationsPage />,
         loader: deanApplicationsLoader,
+      },
+      {
+        path: "/dean/students/",
+        element: <DeanStudentsPage />,
+        loader: deanStudentsPageLoader,
       },
       {
         path: "/dean/questions/",

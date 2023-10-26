@@ -11,8 +11,8 @@ const DeaneryRequestStatus = {
 const requests = [
   {
     submittedBy: {
-      firstName: "Shamil",
-      lastName: "Atarkov",
+      firstName: "Sandro",
+      lastName: "Lucio",
       version: 0,
       id: "6535a1b9c948b0a7029850b6",
     },
@@ -25,8 +25,8 @@ const requests = [
   },
   {
     submittedBy: {
-      firstName: "Shamil",
-      lastName: "Atarkov",
+      firstName: "Sandro",
+      lastName: "Lucio",
       version: 0,
       id: "6535a1b9c948b0a7029850b6",
     },
@@ -39,8 +39,8 @@ const requests = [
   },
   {
     submittedBy: {
-      firstName: "Shamil",
-      lastName: "Atarkov",
+      firstName: "Sandro",
+      lastName: "Lucio",
       version: 0,
       id: "6535a1b9c948b0a7029850b6",
     },
@@ -106,9 +106,9 @@ const DeaneryRequestsPage = () => {
           className="border rounded py-1 px-2"
         />
       </div>
-      <ul>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredRequests.map((request) => (
-          <li key={request.id} className="mb-4">
+          <div key={request.id} className="p-4 border rounded-lg">
             <p>
               <strong>Submitted by:</strong> {request.submittedBy.firstName}{" "}
               {request.submittedBy.lastName}
@@ -173,9 +173,9 @@ const DeaneryRequestsPage = () => {
                 Set Verdict
               </button>
             )}
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

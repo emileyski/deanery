@@ -35,6 +35,7 @@ function Header() {
               <LinkButton to="/dean/specialties">specialties</LinkButton>
               <LinkButton to="/dean/applications">applications</LinkButton>
               <LinkButton to="/dean/questions">questions</LinkButton>
+              <LinkButton to="/dean/students">students</LinkButton>
             </>
           )}
         </>
