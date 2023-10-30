@@ -19,10 +19,7 @@ const start = async () => {
     process.on("SIGINT", () => natsWrapper.client.close());
     process.on("SIGTERM", () => natsWrapper.client.close());
 
-    await mongoose.connect(
-      process.env.MONGO_URI ||
-        "mongodb+srv://emilevi4:QKNlcjPJe7LyHxq6@my-cluster.x0cjd1e.mongodb.net/?retryWrites=true&w=majority"
-    );
+    await mongoose.connect(process.env.MONGO_URI!);
 
     console.log("Connected to MongoDb");
 
